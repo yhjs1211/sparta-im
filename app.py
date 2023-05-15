@@ -3,7 +3,7 @@ app = Flask(__name__)
 
 from pymongo import MongoClient
 
-mongo_key = 'mongodb+srv://sparta:test@cluster0.qt51rgo.mongodb.net/?retryWrites=true&w=majority'
+mongo_key = '<put your key here>'
 client = MongoClient(mongo_key)
 db = client.dbsparta
 
@@ -43,4 +43,4 @@ def bucket_get():
     return jsonify({'result': bucket_li})
 
 if __name__ == '__main__':
-    app.run('127.0.0.1', port=5002, debug=True)
+    app.run('127.0.0.1', port=5003, debug=True)

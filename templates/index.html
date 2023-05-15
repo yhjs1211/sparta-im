@@ -8,6 +8,9 @@
   <title>Novengerse ( 노벤져스 )</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous" />
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/card_flip.css') }}" />
+    <script type="text/javascript" src="{{ url_for('static', filename='js/listing.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/save_members.js') }}"></script>
   <style>
     @import url("https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&display=swap");
 
@@ -18,44 +21,7 @@
       font-family: "Nanum Pen Script", cursive;
     }
 
-    .flip-box {
-      width: 300px;
-      height: 500px;
-      margin: auto;
-    }
-
-    .flip {
-      width: 100%;
-      height: 100%;
-      position: relative;
-      color: white;
-      text-align: center;
-      line-height: 400px;
-      transform-style: preserve-3d;
-      transform: rotateY(0deg);
-      transition: 0.5s;
-    }
-
-    .front,
-    .back {
-      width: 100%;
-      height: 100%;
-      position: absolute;
-      backface-visibility: hidden;
-    }
-
-    .front {
-      background: skyblue;
-    }
-
-    .back {
-      background: orange;
-      transform: rotateY(180deg);
-    }
-
-    .flip-box:hover .flip {
-      transform: rotateY(-180deg);
-    }
+    
   </style>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script>
@@ -63,77 +29,7 @@
       listing();
     });
 
-    function listing() {
-      fetch('/im').then((res) => res.json()).then((data) => {
-        $('#member_intro').empty();
-        console.log(data);
-        let rows = data['result'];
-        rows.forEach(element => {
-          let name = element['name'];
-          let position = element['position'];
-          let self_intro = element['self_introduce'];
-          let mbti = element['mbti'];
-          let comment = element['comment'];
-          let blog = element['blog'];
-          let image = element['image'];
-
-          let temp_html = `
-                  <a href="${blog}">
-                    <div class="flip-box">
-                      <div class="flip">
-                        <div class="front">
-                          <div class="col">
-                            <div class="card">
-                              <img src="${image}" class="card-img-top"
-                                height="300px" />
-                              <div class="card-body" style="height: 200px;">
-                                <h2 id="name" style="color:black">${name}</h2>
-                                <h5 id="position" style="color:black">${position}</h5>
-                                <h6 id="comment" style="color:red">${comment}</h6>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        <div class="back">
-                          <div class="col">
-                            <h3 style="color:blueviolet">${mbti}</h3>
-                            <h2 style="color:black">${self_intro}</h2>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </a>
-                    `;
-          $('#member_intro').append(temp_html);
-        });
-      })
-    }
-
-    function save_member() {
-      let name = $("#name").val();
-      let position = $("#position").val();
-      let s_i = $("#self_introduce").val();
-      let mbti = $("#mbti").val();
-      let comment = $("#comment").val();
-      let blog = $("#blog").val();
-      let img = $("#image").val();
-
-      let formData = new FormData();
-      formData.append("name_give", name);
-      formData.append("po_give", position);
-      formData.append("s_i_give", s_i);
-      formData.append("mbti_give", mbti);
-      formData.append("comment_give", comment);
-      formData.append("blog_give", blog);
-      formData.append("img_give", img);
-
-      fetch("/im", { method: "POST", body: formData })
-        .then((res) => res.json())
-        .then((data) => {
-          alert(data["msg"]);
-          window.location.reload();
-        });
-    }
+    
   </script>
 </head>
 
