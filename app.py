@@ -1,5 +1,10 @@
 from flask import Flask, render_template, request, jsonify
+from flask_cors import CORS
+
 app = Flask(__name__)
+cors = CORS(app, resources={
+    r"/im/*":{"origin":"*"}
+})
 
 from pymongo import MongoClient
 client = MongoClient('mongodb+srv://sparta:test@cluster0.x2zlpmf.mongodb.net/?retryWrites=true&w=majority')
@@ -11,6 +16,7 @@ def home():
 
 @app.route("/im", methods=["POST"])
 def bucket_post():
+
     name = request.form['name_give']
     position = request.form['po_give']
     s_i = request.form['s_i_give']
@@ -36,9 +42,9 @@ def bucket_post():
     
 @app.route("/im", methods=["GET"])
 def bucket_get():
-    bucket_li = list(db.buckets.find({},{'_id':False}))
+    member_li = list(db.novengers.find({},{'_id':False}))
 
-    return jsonify({'bucket_li': bucket_li})
+    return jsonify({'member_li': member_li})
 
 if __name__ == '__main__':
     app.run('127.0.0.1', port=5001, debug=True)
