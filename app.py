@@ -2,7 +2,9 @@ from flask import Flask, render_template, request, jsonify
 app = Flask(__name__)
 
 from pymongo import MongoClient
-client = MongoClient('mongodb+srv://sparta:test@cluster0.x2zlpmf.mongodb.net/?retryWrites=true&w=majority')
+
+mongo_key = 'mongodb+srv://sparta:test@cluster0.qt51rgo.mongodb.net/?retryWrites=true&w=majority'
+client = MongoClient(mongo_key)
 db = client.dbsparta
 
 @app.route('/')
@@ -17,7 +19,7 @@ def bucket_post():
     mbti = request.form['mbti_give']
     comment = request.form['comment_give']
     blog = request.form['blog_give']
-    img = request.form['img_give']
+    image = request.form['img_give']
 
     
     doc = {
@@ -27,7 +29,7 @@ def bucket_post():
         'mbti':mbti,
         'comment':comment,
         'blog':blog,
-        'image':img
+        'image':image
     }
 
     db.novengers.insert_one(doc)
@@ -36,9 +38,9 @@ def bucket_post():
     
 @app.route("/im", methods=["GET"])
 def bucket_get():
-    bucket_li = list(db.buckets.find({},{'_id':False}))
+    bucket_li = list(db.novengers.find({},{'_id':False}))
 
-    return jsonify({'bucket_li': bucket_li})
+    return jsonify({'result': bucket_li})
 
 if __name__ == '__main__':
-    app.run('127.0.0.1', port=5001, debug=True)
+    app.run('127.0.0.1', port=5002, debug=True)
