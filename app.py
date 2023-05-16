@@ -36,9 +36,8 @@ def bucket_post():
     
 @app.route("/im", methods=["GET"])
 def bucket_get():
-    bucket_li = list(db.buckets.find({},{'_id':False}))
-
-    return jsonify({'bucket_li': bucket_li})
+    bucket_li = list(db.novengers.find({},{'_id':False}))
+    return jsonify({'result': bucket_li})
 
 if __name__ == '__main__':
     app.run('127.0.0.1', port=5001, debug=True)
