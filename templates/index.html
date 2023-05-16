@@ -49,7 +49,7 @@
     }
 
     .back {
-      background: orange;
+      background: aquamarine;
       transform: rotateY(180deg);
     }
 
@@ -65,8 +65,8 @@
 
     function listing() {
       fetch('/im').then((res) => res.json()).then((data) => {
-        console.log(data);
         let rows = data['result'];
+
         rows.forEach(element => {
           let name = element['name'];
           let position = element['position'];
@@ -75,36 +75,43 @@
           let comment = element['comment'];
           let blog = element['blog'];
           let image = element['image'];
+          let obid = element['_id'];
 
           // a href="링크" 다음에 target="_blank" rel="noopener noreferrer"를 붙여서 보안을 유지하면서 새 페이지에서 열기
           let temp_html = `
-                  <a href="${blog}" target="_blank" rel="noopener noreferrer">
-                    <div class="flip-box">
-                      <div class="flip">
-                        <div class="front">
-                          <div class="col">
-                            <div class="card">
-                              <img src="${image}" class="card-img-top"
-                                height="300px" />
-                              <div class="card-body" style="height: 200px;">
-                                <h2 id="name" style="color:black">${name}</h2>
-                                <h5 id="position" style="color:black">${position}</h5>
-                                <h6 id="comment" style="color:red">${comment}</h6>
+                <div>
+                    <a href="${blog}" target="_blank" rel="noopener noreferrer">
+                      <span id="idid" style="display:none;">${obid}</span>
+                      <div class="flip-box">
+                        <div class="flip">
+                          <div class="front">
+                            <div class="col">
+                              <div class="card">
+                                <img src="${image}" class="card-img-top"
+                                  height="300px" />
+                                <div class="card-body" style="height: 200px;">
+                                  <h2 id="name" style="color:black">${name}</h2>
+                                  <h5 id="position" style="color:black">${position}</h5>
+                                  <h6 id="comment" style="color:red">${comment}</h6>
+                                </div>
                               </div>
                             </div>
                           </div>
-                        </div>
-                        <div class="back">
-                          <div class="col">
-                            <h3 style="color:blueviolet">${mbti}</h3>
-                            <h2 style="color:black">${self_intro}</h2>
+                          <div class="back">
+                            <div class="col">
+                              <h3 style="color:blueviolet">${mbti}</h3>
+                              <h2 style="color:black">${self_intro}</h2>
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                  </a>
+                    </a>
+                    <button onclick="delete_member('${obid}')" type="button" class="btn btn-primary" style="width: 100px" class="btn btn-outline-success" data-bs-toggle="modal" type="button">
+                      Delete
+                    </button>
+                </div>
                     `;
-          $('#member_intro').append(temp_html);
+          $('#member_intro').append(temp_html);         
         });
       })
     }
@@ -131,6 +138,20 @@
         .then((res) => res.json())
         .then((data) => {
           alert(data["msg"]);
+          window.location.reload();
+        });
+    }
+
+    function delete_member(id2) {
+      // console.log(document.getElementById("idid").textContent)
+      // let id2 = document.getElementById("idid").textContent
+      console.log(id2)
+      let formData = new FormData();
+      formData.append("_id_give", id2);
+
+      fetch("/qq", { method: "DELETE", body: formData })
+        .then((res) => res.json())
+        .then((data) => {
           window.location.reload();
         });
     }
@@ -190,12 +211,13 @@
     </div>
   </div>
 
+
   <div id="team_title">
     <h1>NoVengerse Team</h1>
   </div>
 
   <div class="line row row-cols-1 row-cols-md-5 g-4" id="member_intro">
-    <a href="https://hoonsworld1211.tistory.com/"target="_blank" rel="noopener noreferrer">
+    <a href="https://hoonsworld1211.tistory.com/" target="_blank" rel="noopener noreferrer">
       <div class="flip-box">
         <div class="flip">
           <div class="front">
@@ -220,7 +242,7 @@
         </div>
       </div>
     </a>
-    <a href="https://minker.tistory.com/"target="_blank" rel="noopener noreferrer">
+    <a href="https://minker.tistory.com/" target="_blank" rel="noopener noreferrer">
       <div class="flip-box">
         <div class="flip">
           <div class="front">
@@ -240,7 +262,7 @@
         </div>
       </div>
     </a>
-    <a href="https://velog.io/@eternalife"target="_blank" rel="noopener noreferrer">
+    <a href="https://velog.io/@eternalife" target="_blank" rel="noopener noreferrer">
       <div class="flip-box">
         <div class="flip">
           <div class="front">
@@ -260,7 +282,7 @@
         </div>
       </div>
     </a>
-    <a href="https://intellectualengineeringstorage.tistory.com/"target="_blank" rel="noopener noreferrer">
+    <a href="https://intellectualengineeringstorage.tistory.com/" target="_blank" rel="noopener noreferrer">
       <div class="flip-box">
         <div class="flip">
           <div class="front">

@@ -1,9 +1,13 @@
 from flask import Flask, render_template, request, jsonify
 app = Flask(__name__)
 
+
+
 from pymongo import MongoClient
+from bson.objectid import ObjectId
 client = MongoClient('mongodb+srv://sparta:test@cluster0.vxfylst.mongodb.net/?retryWrites=true&w=majority')
 db = client.dbsparta
+col = db['novengers']
 
 @app.route('/')
 def home():
@@ -36,9 +40,23 @@ def bucket_post():
     
 @app.route("/im", methods=["GET"])
 def bucket_get():
-    bucket_li = list(db.novengers.find({},{'_id':False}))
+    bucket_li = list(db.novengers.find({}))
+    for a in bucket_li:
+        a['_id']=str(a['_id'])
 
     return jsonify({'result': bucket_li})
+
+
+@app.route("/qq", methods=["DELETE"])
+def bucket_del():
+    # id = request.form.get("_id_give")
+    id = request.form['_id_give']
+    print("qqqqqqqqqqqqqqqqqqqqqq",id)
+    id = ObjectId(id)
+    db.novengers.delete_one({'_id':id})
+
+    return jsonify({'msg': 'Member deleted successfully'})
+
 
 if __name__ == '__main__':
     app.run('127.0.0.1', port=5001, debug=True)
