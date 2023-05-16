@@ -17,9 +17,9 @@ function save_member() {
     formData.append("img_give", img);
 
     fetch("/im", { method: "POST", body: formData })
-      .then((res) => res.json())
-      .then((data) => {
-        alert(data["msg"]);
-        window.location.reload();
-      });
-  }
+        .then((res) => res.json())
+        .then((data) => {
+            alert(data["msg"]);
+            window.location.reload();
+        });
+}

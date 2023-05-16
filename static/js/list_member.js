@@ -1,9 +1,10 @@
-function listing() {
+function list_member() {
     fetch('/im').then((res) => res.json()).then((data) => {
       $('#member_intro').empty();
       console.log(data);
       let rows = data['result'];
       rows.forEach(element => {
+        let obj_id = element['_id'];
         let name = element['name'];
         let position = element['position'];
         let self_intro = element['self_introduce'];
