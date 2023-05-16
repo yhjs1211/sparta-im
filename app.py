@@ -2,13 +2,7 @@ from flask import Flask, render_template, request, jsonify
 app = Flask(__name__)
 
 from pymongo import MongoClient
-<<<<<<< HEAD
 client = MongoClient('mongodb+srv://sparta:test@cluster0.vxfylst.mongodb.net/?retryWrites=true&w=majority')
-=======
-
-mongo_key = '<put your key here>'
-client = MongoClient(mongo_key)
->>>>>>> 22da8d8a59343d5c53951e5fb425b3f3e2099de6
 db = client.dbsparta
 
 @app.route('/')
@@ -47,8 +41,5 @@ def bucket_get():
     return jsonify({'result': bucket_li})
 
 if __name__ == '__main__':
-<<<<<<< HEAD
     app.run('127.0.0.1', port=5001, debug=True)
-=======
-    app.run('127.0.0.1', port=5003, debug=True)
->>>>>>> 22da8d8a59343d5c53951e5fb425b3f3e2099de6
+
