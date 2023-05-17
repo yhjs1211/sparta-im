@@ -20,7 +20,8 @@ def novengerse_post():
     doc = {}
     
     if('_id' in request.form):
-        # ID 유효성 2차 검사
+        
+        # ID 유효성 2차 검사 ( DB 상에 존재하는 ID값인지 아닌지 )
         chk = db.novengers.find_one({'_id':ObjectId(request.form['_id'])})
         
         if(chk is not None):
