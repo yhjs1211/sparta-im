@@ -14,11 +14,14 @@
     <style>
       @import url("https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&display=swap");
 
+      * {
+        font-family: "Nanum Pen Script", cursive;
+      }
+
       #team_title {
-        padding: 50px 20px 20px 20px;
+        padding: 100px 20px 150px 20px;
         text-align: center;
         color: goldenrod;
-        font-family: "Nanum Pen Script", cursive;
       }
 
       .flip-box {
@@ -48,10 +51,10 @@
       }
 
       .front {
-        background: skyblue;
+        background: white;
       }
       .back {
-        background: orange;
+        background: url("https://png.pngtree.com/background/20210710/original/pngtree-paper-texture-background-picture-image_976949.jpg");
         transform: rotateY(180deg);
       }
 
@@ -88,9 +91,9 @@
                                             height="300px"
                                         />
                                         <div class="card-body" style="height: 200px;">
-                                            <h2 id="name" style="color:black">${m["name"]}</h2>
+                                            <h1 id="name" style="color:black">${m["name"]}</h1>
                                             <h5 id="position" style="color:black">${m["position"]}</h5>
-                                            <h6 id="comment" style="color:red">${m["comment"]}</h6>
+                                            <h4 id="comment" style="color:red">${m["comment"]}</h4>
                                         </div>
                                         </div>
                                     </div>
@@ -120,7 +123,7 @@
           let v = $('#'+t['id']+'-value').val();
           // 고유 ID 1차 검증
           if(t['id']=='_id'){
-            
+
             // ID 값을 가지고 있으니 true
             formData_has_id=true;
             // ID의 값이 유효한지 검증
