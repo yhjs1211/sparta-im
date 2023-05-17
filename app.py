@@ -15,7 +15,22 @@ db = client.dbsparta
 def home():
     return render_template('index.html')
 
-@app.route("/im", methods=["POST"])
+# 멤버
+
+@app.route("/members")
+def render_member():
+    return render_template('member.html')
+    
+@app.route("/members/list", methods=["GET"])
+def novengerse_get():
+    member_li = list(db.novengers.find({}))
+    
+    for a in member_li:
+        a['_id']=str(a['_id'])
+
+    return jsonify({'member_li': member_li})
+
+@app.route("/members", methods=["POST"])
 def novengerse_post():
     doc = {}
     
@@ -45,15 +60,35 @@ def novengerse_post():
         db.novengers.insert_one(doc)
         _id = str(db.novengers.find_one({'name':request.form['name']})['_id'])
         return jsonify({'msg': '고유 ID는'+_id+' 입니다.'})
-    
-@app.route("/im", methods=["GET"])
-def novengerse_get():
-    member_li = list(db.novengers.find({}))
-    
-    for a in member_li:
-        a['_id']=str(a['_id'])
 
-    return jsonify({'member_li': member_li})
+# 방명록
+
+@app.route("/board")
+def render_board():
+    return render_template("board.html")
+
+@app.route("/board", methods=["POST"])
+def create_visitBook():
+    doc={}
+    if('_id' in request.form):
+        db.visitBooks.delete_one({'_id':ObjectId(request.form['_id'][0:24])})
+        return jsonify({'msg':"방명록이 삭제되었습니다."})
+    else:
+        for i in request.form.keys():
+            doc[i]=request.form[i]
+        db.visitBooks.insert_one(doc)
+        return jsonify({'msg':"방명록이 생성되었습니다."})
+    
+    
+
+@app.route("/board/list", methods=["GET"])
+def visitBook_get():
+    visitBook_li = list(db.visitBooks.find({}))
+    
+    for a in visitBook_li:
+        a['_id']=str(a['_id'])
+    return jsonify({'visitBook_li': visitBook_li})
+
 
 if __name__ == '__main__':
     app.run('127.0.0.1', port=5001, debug=True)
