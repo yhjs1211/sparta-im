@@ -1,0 +1,111 @@
+{% extends 'index.html' %} {% block content %}
+<style>
+  .novengers_img {
+    padding-left: 600px;
+  }
+
+  .title-buttons {
+    margin-left: 800px;
+  }
+</style>
+<script>
+  $(document).ready(function () {
+    load_visitBook();
+  });
+
+  function load_visitBook() {
+    fetch("http://localhost:5001/board/list")
+      .then((res) => res.json())
+      .then((data) => {
+        let arr = data["visitBook_li"];
+        arr.forEach((v) => {
+          $("#visitBook-card").append(`
+            <div class="card position-relative" style="width: 18rem;">
+              <h3>${v['nickname']}</h3>
+              <div class="card-body">
+                <textarea id="${v['_id']}" hidden>${v['_id']}</textarea>
+                <p class="card-text">${v['comment']}</p>
+              </div>
+              <button type="button" id="${v['_id']}" onclick="delete_visitBook(this.id)" class="btn-close position-absolute top-0 end-0" aria-label="Close"></button>
+            </div>
+            `);
+        });
+      });
+  }
+
+  function delete_visitBook(id){
+    let _id = $('#'+id).val();
+
+    let formData = new FormData();
+    formData.append('_id',_id);
+    fetch("http://localhost:5001/board", {method: "POST", body:formData})
+    .then((res)=>res.json())
+    .then((data)=>{
+      alert(data["msg"]);
+      window.location.reload();
+    })
+
+  }
+
+  function create_visitBook() {
+    let nickname = $("#nickname").val();
+    let comment = $("#comment").val();
+
+    let formData = new FormData();
+    formData.append("nickname", nickname);
+    formData.append("comment", comment);
+
+    fetch("http://localhost:5001/board", { method: "POST", body: formData })
+      .then((res) => res.json())
+      .then((data) => {
+        alert(data["msg"]);
+        window.location.reload();
+      });
+  }
+</script>
+<div class="novengers">
+  <div>
+    <img
+      class="novengers_img"
+      src="{{url_for('static',filename='images/visitbook.png')}}"
+      height="450px"
+    />
+  </div>
+  <div class="title-buttons">
+    <button
+      class="btn btn-outline-success btn-lg"
+      id="create-button"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#visitBook"
+      aria-expanded="false"
+      aria-controls="visitBook"
+    >
+      한마디 남기기
+    </button>
+  </div>
+</div>
+<!-- Collapse -->
+<div class="collapse" id="visitBook">
+  <div class="card card-body">
+    <div class="position-relative">
+      <div class="mb-3">
+        <label for="nickname" class="form-label">닉네임 👏</label>
+        <input type="email" class="form-control" id="nickname" />
+      </div>
+      <div class="mb-5">
+        <label for="comment" class="form-label">한마디 👏</label>
+        <textarea class="form-control" id="comment" rows="3"></textarea>
+      </div>
+      <button
+        class="btn btn-lg btn-primary position-absolute bottom-0 end-0"
+        type="button"
+        onclick="create_visitBook()"
+      >
+        등록하기
+      </button>
+    </div>
+  </div>
+</div>
+<div id="visitBook-card" class="line row row-cols-1 row-cols-md-5 g-4"></div>
+{% endblock %}
