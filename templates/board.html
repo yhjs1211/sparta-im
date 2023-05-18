@@ -1,13 +1,15 @@
 {% extends 'index.html' %} {% block content %}
 <style>
   .novengers_img {
-    padding-left: 600px;
+    margin: auto;
+    display: block;
   }
 
   .title-buttons {
-    margin-left: 800px;
+    text-align: center;
   }
 </style>
+
 <script>
   $(document).ready(function () {
     load_visitBook();
@@ -18,48 +20,51 @@
       .then((res) => res.json())
       .then((data) => {
         let arr = data["visitBook_li"];
+        let visit_num = 1;
         arr.forEach((v) => {
           $("#visitBook-card").append(`
             <div class="card position-relative" style="width: 18rem;">
-              <h3>${v['nickname']}</h3>
+              <h3>${v["nickname"]}</h3>
+              <hr/>
               <div class="card-body">
-                <textarea id="${v['_id']}" hidden>${v['_id']}</textarea>
-                <p class="card-text">${v['comment']}</p>
+                <p class="card-text">${v["comment"]}</p>
               </div>
-              <button type="button" id="${v['_id']}" onclick="delete_visitBook(this.id)" class="btn-close position-absolute top-0 end-0" aria-label="Close"></button>
+              <button type="button" data-bs-toggle="modal" data-bs-target="#deleteModal" class="btn-close position-absolute top-0 end-0" aria-label="Close"></button>
             </div>
             `);
         });
       });
   }
 
-  function delete_visitBook(id){
-    let _id = $('#'+id).val();
+  function delete_visitBook() {
+    let password = $("#delete-visitBook").val();
 
     let formData = new FormData();
-    formData.append('_id',_id);
-    fetch("http://localhost:5001/board", {method: "POST", body:formData})
-    .then((res)=>res.json())
-    .then((data)=>{
-      alert(data["msg"]);
-      window.location.reload();
-    })
+    formData.append("password", password);
 
+    fetch("http://localhost:5001/board", { method: "DELETE", body: formData })
+      .then((res) => res.json())
+      .then((data) => {
+        alert(data["msg"]);
+        window.location.reload();
+      });
   }
 
   function create_visitBook() {
     let nickname = $("#nickname").val();
     let comment = $("#comment").val();
+    let password = $("#password").val();
 
     let formData = new FormData();
     formData.append("nickname", nickname);
     formData.append("comment", comment);
+    formData.append("password", password);
 
     fetch("http://localhost:5001/board", { method: "POST", body: formData })
       .then((res) => res.json())
       .then((data) => {
+        console.log(data["msg"]);
         alert(data["msg"]);
-        window.location.reload();
       });
   }
 </script>
@@ -86,26 +91,83 @@
   </div>
 </div>
 <!-- Collapse -->
-<div class="collapse" id="visitBook">
-  <div class="card card-body">
-    <div class="position-relative">
-      <div class="mb-3">
-        <label for="nickname" class="form-label">닉네임 👏</label>
-        <input type="email" class="form-control" id="nickname" />
+<form id="visitBookForm" onsubmit="create_visitBook()">
+  <div class="collapse" id="visitBook">
+    <div class="card card-body">
+      <div class="position-relative">
+        <div class="row">
+          <div class="col">
+            <label for="nickname" class="form-label">닉네임 👏</label>
+            <input type="text" class="form-control" id="nickname" required />
+          </div>
+          <div class="col">
+            <label for="password" class="form-label">비밀번호 👏</label>
+            <input
+              type="password"
+              class="form-control"
+              id="password"
+              required
+            />
+          </div>
+        </div>
+        <div class="mb-5">
+          <label for="comment" class="form-label">한마디 👏</label>
+          <textarea class="form-control" id="comment" rows="4"></textarea>
+        </div>
+        <button
+          class="btn btn-lg btn-primary position-absolute bottom-0 end-0"
+          type="submit"
+        >
+          등록하기
+        </button>
       </div>
-      <div class="mb-5">
-        <label for="comment" class="form-label">한마디 👏</label>
-        <textarea class="form-control" id="comment" rows="3"></textarea>
-      </div>
-      <button
-        class="btn btn-lg btn-primary position-absolute bottom-0 end-0"
-        type="button"
-        onclick="create_visitBook()"
-      >
-        등록하기
-      </button>
     </div>
   </div>
+</form>
+
+<!-- Modal -->
+<div
+  class="modal fade"
+  id="deleteModal"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <form id="deleteVisitBookForm" onsubmit="delete_visitBook()">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5">방명록 삭제</h1>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <h3>👏 삭제하시려면 비밀번호를 입력해주세요.</h3>
+          <input
+            class="form-control"
+            type="password"
+            id="delete-visitBook"
+            required
+          />
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-outline-danger">삭제하기</button>
+          <button
+            type="button"
+            class="btn btn-outline-secondary"
+            data-bs-dismiss="modal"
+          >
+            닫기
+          </button>
+        </div>
+      </div>
+    </div>
+  </form>
 </div>
+
 <div id="visitBook-card" class="line row row-cols-1 row-cols-md-5 g-4"></div>
 {% endblock %}

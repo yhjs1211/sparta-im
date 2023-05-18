@@ -17,17 +17,19 @@
       * {
         font-family: "Nanum Pen Script", cursive;
       }
-      .title{
+
+      .title {
         font-size: 100px;
         text-align: center;
         padding-top: 50px;
+        padding-bottom: 150px;
       }
     </style>
     <!-- JQuery -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   </head>
   <body>
-    <nav class="navbar navbar-expand-lg bg-light">
+    <nav class="navbar navbar-dark navbar-expand-lg bg-dark">
       <div class="container-fluid">
         <a class="navbar-brand" href="http://localhost:5001/">I'M</a>
         <button
@@ -44,26 +46,60 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav me-auto mb-2 mb-lg-0" id="chk">
             <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="http://localhost:5001/">Home</a>
+              <a
+                class="nav-link active"
+                aria-current="page"
+                href="http://localhost:5001/"
+                >Home</a
+              >
             </li>
             <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <a
+                class="nav-link dropdown-toggle"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
                 목록
               </a>
               <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="http://localhost:5001/members">Member</a></li>
-                <li><a class="dropdown-item" href="http://localhost:5001/board">방명록</a></li>
+                <li>
+                  <a class="dropdown-item" href="http://localhost:5001/members"
+                    >Member</a
+                  >
+                </li>
+                <li>
+                  <a class="dropdown-item" href="http://localhost:5001/board"
+                    >방명록</a
+                  >
+                </li>
               </ul>
             </li>
           </ul>
         </div>
       </div>
     </nav>
-    
+
     {% block content %}
-    <p class="title">Novengers 팀을 소개합니다</p>
+    <div class="introduceNovengers">
+      <p class="title" id="inTitle">Novengers 팀을 소개합니다</p>
+      <div class="row">
+        <div class="col">
+          <h2 style="text-align: center">끈기</h2>
+          <h4 style="text-align: center; padding-top: 40px;">난제를 만나더라도 제자리에 머물지 않고 해결할때까지 끝을 보는 끈기</h4>
+        </div>
+        <div class="col">
+          <h2 style="text-align: center">호기심</h2>
+          <h4 style="text-align: center; padding-top: 40px;">하나를 공부하면 열가지를 공부해 나가는 호기심</h4>
+        </div>
+        <div class="col">
+          <h2 style="text-align: center">협동심</h2>
+          <h4 style="text-align: center; padding-top: 40px;">소통의 중요성을 알고 힘이 되며 나아가는 협동심</h4>
+        </div>
+      </div>
+    </div>
+
     {% endblock%}
-    
 
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
