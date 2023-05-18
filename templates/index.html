@@ -56,6 +56,15 @@
     .flip-box:hover .flip {
       transform: rotateY(-180deg);
     }
+
+    .modal-footer {
+      display: flex;
+      justify-content: center;
+    }
+
+    .modal-footer button {
+      margin: 0 5px;
+    }
   </style>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script>
@@ -76,12 +85,14 @@
           let blog = element['blog'];
           let image = element['image'];
           let obid = element['_id'];
+          let pw = element['pw'];
 
           // a href="링크" 다음에 target="_blank" rel="noopener noreferrer"를 붙여서 보안을 유지하면서 새 페이지에서 열기
           let temp_html = `
-                <div>
+                  <div>
                     <a href="${blog}" target="_blank" rel="noopener noreferrer">
                       <span id="idid" style="display:none;">${obid}</span>
+                      <span id="pwpw" style="display:none;">${pw}</span>
                       <div class="flip-box">
                         <div class="flip">
                           <div class="front">
@@ -106,15 +117,24 @@
                         </div>
                       </div>
                     </a>
-                    <button onclick="delete_member('${obid}')" type="button" class="btn btn-primary" style="width: 100px" class="btn btn-outline-success" data-bs-toggle="modal" type="button">
-                      Delete
-                    </button>
-                </div>
+                    <div class="modal-footer">
+                      <div class="button">
+                        <button onclick="delete_member1('${obid}','${pw}')" class="btn btn-primary" style="width: 75px"  data-bs-toggle="modal" type="button">
+                          Delete
+                        </button>
+                        <button onclick="update_member1('${obid}','${pw}')" class="btn btn-primary" style="width: 75px"  type="button">
+                          Update
+                        </button>
+                      </div>
+                    </div>
+                  </div>
                     `;
-          $('#member_intro').append(temp_html);         
+          $('#member_intro').append(temp_html);
         });
       })
     }
+
+
 
     function save_member() {
       let name = $("#name").val();
@@ -124,6 +144,7 @@
       let comment = $("#comment").val();
       let blog = $("#blog").val();
       let img = $("#image").val();
+      let pw = $("#pw").val();
 
       let formData = new FormData();
       formData.append("name_give", name);
@@ -133,6 +154,7 @@
       formData.append("comment_give", comment);
       formData.append("blog_give", blog);
       formData.append("img_give", img);
+      formData.append("img_pw", pw);
 
       fetch("/im", { method: "POST", body: formData })
         .then((res) => res.json())
@@ -142,10 +164,156 @@
         });
     }
 
-    function delete_member(id2) {
+
+
+
+    function update_member1(id, pw) {
+      listing2();
+
+      function listing2() {
+        fetch('/im').then((res) => res.json()).then((data) => {
+          let rows = data['result'];
+          rows.forEach(element => {
+            let obid = element['_id'];
+            console.log('판별전.', obid)
+
+            if (obid == id) {
+              console.log('판별후.', obid)
+              let name = element['name'];
+              let position = element['position'];
+              let self_intro = element['self_introduce'];
+              let mbti = element['mbti'];
+              let comment = element['comment'];
+              let blog = element['blog'];
+              let image = element['image'];
+              let obpw = element['pw'];
+              let password = prompt("비밀번호 입력 : ");
+              if (password === pw) {
+                let temp_html = `    <div class="modal fade" id="update" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                      <div class="modal-dialog">
+                                        <div class="modal-content">
+                                          <div class="modal-header">
+                                            <h1 class="modal-title fs-5" id="exampleModalLabel">멤버 정보 수정</h1>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                          </div>
+                                          <div class="modal-body">
+                                            <input id="name" class="form-control" type="text" value=${name}>
+                                            <input id="position" class="form-control" type="text" value=${position}>
+                                            <input id="mbti" class="form-control" type="text" value=${mbti}>
+                                            <input id="self_introduce" class="form-control" type="text" value=${self_intro}>
+                                            <input id="comment" class="form-control" type="text" value=${comment}>
+                                            <input id="blog" class="form-control" type="text" value=${blog}>
+                                            <input id="image" class="form-control" type="text" value=${image}>
+                                            <input id="pw" class="form-control" type="text" value=${obpw}>
+                                            <span id="idid" style="display:none;">${obid}</span>
+                                          </div>
+                                          <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                              Close
+                                            </button>
+                                            <button onclick="update_member()" type="button" class="btn btn-primary" data-bs-dismiss="modal">
+                                              수정하기
+                                            </button>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                
+                `
+                // '${obid}','${name}','${position}','${mbti}','${self_intro}','${comment}','${blog}','${image}','${obpw}'
+                $('#newmodal').append(temp_html);
+
+
+                $('#update').modal('show');
+
+
+              } else if (password == "") {
+                alert("비밀번호를 입력해주세요");
+              } else if (password == null) {
+                alert("취소되었습니다.");
+              } else {
+                alert("비밀번호 오류");
+              }
+
+            }
+          });
+
+        })
+      }
+    }
+
+    function update_member() {
+      // obid, name, position, mbti, self_intro, comment, blog, image, obpw
+
+      let obid = $("#idid").text();
+      let name = $("#name").val();
+      let position = $("#position").val();
+      let s_i = $("#self_introduce").val();
+      let mbti = $("#mbti").val();
+      let comment = $("#comment").val();
+      let blog = $("#blog").val();
+      let img = $("#image").val();
+      let pw = $("#pw").val();
+
+
+      console.log('OBID:', obid, name, position, s_i, mbti, comment, blog, img, pw)
+
+      let formData = new FormData();
+      formData.append("_id", obid);
+      formData.append("name", name);
+      formData.append("position", position);
+      formData.append("self_introduce", s_i);
+      formData.append("mbti", mbti);
+      formData.append("comment", comment);
+      formData.append("blog", blog);
+      formData.append("image", img);
+      formData.append("pw", pw);
+
+      // console.log(obid, name, position, mbti, self_intro, comment, blog, image, obpw);
+
+      fetch("/ww", { method: "PUT", body: formData })
+        .then((res) => res.json())
+        .then((data) => {
+          alert(data["msg"]);
+          window.location.reload();
+        });
+
+    }
+
+
+
+    // function update_member2() {
+
+
+    //   let formData = new FormData();
+    //   formData.append("_id_give", id2);
+
+    //   fetch("/qq", { method: "DELETE", body: formData })
+    //     .then((res) => res.json())
+    //     .then((data) => {
+    //       window.location.reload();
+    //     });
+    // }
+
+    function delete_member1(id, pw) {
+      // console.log(id,pw)   
+      let password = prompt("비밀번호 입력 : ");
+      if (password === pw) {
+        delete_member2(id);
+      } else if (password == "") {
+        alert("비밀번호를 입력해주세요");
+      } else if (password == null) {
+        alert("취소되었습니다.");
+      } else {
+        alert("비밀번호 오류");
+      }
+    }
+
+    function delete_member2(id2) {
       // console.log(document.getElementById("idid").textContent)
       // let id2 = document.getElementById("idid").textContent
-      console.log(id2)
+      // console.log(id2)
+
       let formData = new FormData();
       formData.append("_id_give", id2);
 
@@ -155,6 +323,14 @@
           window.location.reload();
         });
     }
+
+
+
+    // // function update_member2(id, pw) {
+    // //   let inputValue = prompt("비밀번호 입력 : ");
+    // //   let inputValue = prompt("이름 입력 : ");
+    // // }
+
   </script>
 </head>
 
@@ -181,7 +357,9 @@
       </button>
     </form>
   </nav>
+  <div id="newmodal">
 
+  </div>
   <!-- Modal -->
   <div class="modal fade" id="memberRegister" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -198,6 +376,7 @@
           <input id="comment" class="form-control" type="text" placeholder="한마디 !" />
           <input id="blog" class="form-control" type="text" placeholder="블로그 주소" />
           <input id="image" class="form-control" type="text" placeholder="Image URL을 입력해주세요." />
+          <input id="pw" class="form-control" type="text" placeholder="수정/삭제에 사용할 비밀번호 입력." />
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
@@ -210,6 +389,8 @@
       </div>
     </div>
   </div>
+
+
 
 
   <div id="team_title">
