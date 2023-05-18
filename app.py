@@ -2,22 +2,22 @@ from bson.objectid import ObjectId
 from flask import Flask, render_template, request, jsonify
 app = Flask(__name__)
 
-mongo_Key = 'Your_Mongo Key'
-
 from pymongo import MongoClient
-client = MongoClient('Your_Mongo Key')
+
+mongo_key = 'Your Mongo Key'
+
+client = MongoClient('Your Mongo Key')
 db = client.dbsparta
 
 @app.route('/')
 def home():
     try:
-        return render_template('index.html'),200 #render_template() > flask에서 제공하는 함수로 templates에 저장된 html을 불러올 때 사용한다.
+        return render_template('index.html'), 200
     except Exception as e:
         print(e)
-        return jsonify({'msg':e}),500 #flask에 내장되어 있는 기능으로 jsonify() 모듈을 사용하여 JSON 데이터 전달
-    
+        return jsonify({ 'msg':e }), 500
 
-#Create
+# 회원정보를 DB에 저장
 @app.route("/im", methods=["POST"])
 def bucket_post():
     try:
@@ -27,7 +27,7 @@ def bucket_post():
         mbti = request.form['mbti_give']
         comment = request.form['comment_give']
         blog = request.form['blog_give']
-        img = request.form['img_give']
+        image = request.form['img_give']
 
         
         doc = {
@@ -37,16 +37,17 @@ def bucket_post():
             'mbti':mbti,
             'comment':comment,
             'blog':blog,
-            'image':img
+            'image':image
         }
 
         db.novengers.insert_one(doc)
 
-        return jsonify({'msg': 'Save Compelete !'}),200
+        return jsonify({ 'msg': 'Save Compelete !' }), 200
     except Exception as e:
         print(e)
-        return jsonify({'msg:e'}),500
-#Update
+        return jsonify({ 'msg':e }), 500
+
+# 회원정보 수정
 @app.route('/im', methods=["PUT"])
 def bucket_put():
     try:
@@ -57,7 +58,8 @@ def bucket_put():
         mbti = request.form['mbti_give']
         comment = request.form['comment_give']
         blog = request.form['blog_give']
-        img = request.form['img_give']
+        image = request.form['img_give']
+        
 
         # print("post_id:")
         # print(post_id)
@@ -66,7 +68,7 @@ def bucket_put():
         # for i in request.form.keys():
         #     print(i + ':' + request.form[i])
 
-        filiter = {'_id:ObjectId(post_id)'}
+        filter = { '_id':ObjectId(post_id) }
 
         doc = {
             'name':name,
@@ -75,26 +77,70 @@ def bucket_put():
             'mbti':mbti,
             'comment':comment,
             'blog':blog,
-            'image':img
+            'image':image
         }
-
+        
         for i in doc.keys():
             new_value = {"$set":{i:doc[i]}}
             db.novengers.update_one(filter, new_value)
-
         # new_value = {"$set":{'position':"181818"}}
         # db.novengers.update_one(filter, new_value)
-        return jsonify({'msg':'수정이 완료되었습니다.'}),200
+
+        return jsonify({ 'msg':'수정이 완료됐습니다.' }), 200
     except Exception as e:
+        print(e)
+        return jsonify({ 'msg':e }), 500
+
+# 회원정보 삭제
+@app.route('/im', methods=["DELETE"])
+def bucket_delete():
+    try:
+        post_id_receive = request.form['post_id_give']
+        db.novengers.delete_one({'_id':ObjectId(post_id_receive)})
+        return jsonify({ 'msg':"삭제가 완료됐습니다." }), 200
+    except Exception as e:
+        print(e)
+        return jsonify({ 'msg':e }), 500
+    
+
+# 회원정보를 클라이언트에 넘겨줌
+@app.route("/im", methods=["GET"])
+def bucket_get():
+    try:
+        # temp = db.novengers.find({})
+        # for i in temp:
+        #     print(i)
+        bucket_li = list(db.novengers.find({}))
+        # print(bucket_li)
+        for i in range(0, len(bucket_li)):
+            bucket_li[i]['_id'] = str(bucket_li[i]['_id'])
+    
+        # print(bucket_li)
+    
+        return jsonify({ 'result': bucket_li }), 200
+        # return jsonify({'result': "message"})
+    except Exception as e:
+        print(e)
+        return jsonify({ 'msg':e }), 500
+
+# 수정할 때 요청한 특정 회원정보를 클라이언트에게 넘겨준다.
+@app.route('/info/<id>', methods=["GET"])
+def call_info(id):
+    try:
+        # print(id)
+        # print(db.novengers.find_one({'_id':ObjectId(id)}, {'_id':False}))
+        # info = list(db.novengers.find_one({'_id':ObjectId(id)}, {'_id':False}))
+        print(id)
+        info = list(db.novengers.find({ '_id': ObjectId(id)}, { '_id':False }))
+        # info = list(db.novengers.find_one())
+        # print("111======111")
+        # print(info)
+        # print("222======222")
+        return jsonify({ 'result':info }), 200
+    except Exception as e:
+        print('error message : ')
         print(e)
         return jsonify({'msg':e}), 500
 
-
-#Read
-@app.route("/im", methods=["GET"])
-def bucket_get():
-    bucket_li = list(db.novengers.find({},{'_id':False}))
-    return jsonify({'result': bucket_li})
-
 if __name__ == '__main__':
-    app.run('127.0.0.1', port=5001, debug=True)
+    app.run('127.0.0.1', port=5003, debug=True)
