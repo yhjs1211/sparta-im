@@ -80,9 +80,9 @@ def create_visitBook():
 @app.route("/board", methods=["DELETE"])
 def delete_visitBook():
     password = request.form['password']
-    print(password)    
+
     chk = db.visitBooks.find_one({'password':password})
-    print(chk)
+
     if(chk is not None):
         db.visitBooks.delete_one({'password':password})
         return jsonify({'msg':"삭제되었습니다."})
@@ -91,10 +91,8 @@ def delete_visitBook():
 
 @app.route("/board/list", methods=["GET"])
 def visitBook_get():
-    visitBook_li = list(db.visitBooks.find({}))
+    visitBook_li = list(db.visitBooks.find({},{'_id': False}))
     
-    for a in visitBook_li:
-        a['_id']=str(a['_id'])[18:24]
     return jsonify({'visitBook_li': visitBook_li})
 
 if __name__ == '__main__':
