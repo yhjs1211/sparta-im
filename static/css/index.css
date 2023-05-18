@@ -1,0 +1,29 @@
+.sentence {
+    display: flex;
+    margin: auto;
+    justify-content: center;
+    height: 200px;
+    font-size: 50px;
+    }
+
+    #sentence_box {
+      margin-top: 65px;
+    }
+
+    #sentence2 {
+      display: none;
+    }
+
+    #sentence3 {
+      display: none;
+    }
+
+    .btn-left {
+      margin-top: 10px;
+      margin-right: 500px;
+    }
+
+    .btn-right {
+      margin-top: 10px;
+      margin-left: 900px;
+    }

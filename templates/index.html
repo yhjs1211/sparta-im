@@ -11,6 +11,7 @@
       integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65"
       crossorigin="anonymous"
     />
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/index.css') }}" />
     <style>
       @import url("https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&display=swap");
 
@@ -24,9 +25,13 @@
         padding-top: 50px;
         padding-bottom: 150px;
       }
+
     </style>
+
     <!-- JQuery -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <script type="text/javascript" src="{{ url_for('static', filename='js/index.js') }}"></script>
   </head>
   <body>
     <nav class="navbar navbar-dark navbar-expand-lg bg-dark">
@@ -83,18 +88,27 @@
     {% block content %}
     <div class="introduceNovengers">
       <p class="title" id="inTitle">Novengers 팀을 소개합니다</p>
+      <div class="btn-introduce" style="margin: auto;">
+        <div class="btn-right">
+          <div class="btn-left">
+            <button type="button" class="btn btn-secondary" onclick="previous_sentence()"></button>
+            <button type="button" class="btn btn-secondary" onclick="next_sentence()"></button>
+          </div>
+        </div>
+      </div>
       <div class="row">
-        <div class="col">
-          <h2 style="text-align: center">끈기</h2>
-          <h4 style="text-align: center; padding-top: 40px;">난제를 만나더라도 제자리에 머물지 않고 해결할때까지 끝을 보는 끈기</h4>
-        </div>
-        <div class="col">
-          <h2 style="text-align: center">호기심</h2>
-          <h4 style="text-align: center; padding-top: 40px;">하나를 공부하면 열가지를 공부해 나가는 호기심</h4>
-        </div>
-        <div class="col">
-          <h2 style="text-align: center">협동심</h2>
-          <h4 style="text-align: center; padding-top: 40px;">소통의 중요성을 알고 힘이 되며 나아가는 협동심</h4>
+        <div class="sentence">
+          <div id="sentence_box">
+            <div class="col">
+              <span style="text-align: center" id="sentence1">끈기 <br> 난제를 만나더라도 제자리에 머물지 않고 해결할때까지 끝을 보는 끈기</span>
+            </div>
+            <div class="col">
+              <span style="text-align: center" id="sentence2">호기심 <br> 하나를 공부하면 열가지를 공부해 나가는 호기심</span>
+            </div>
+            <div class="col">
+              <span style="text-align: center" id="sentence3">협동심 <br> 소통의 중요성을 알고 힘이 되며 나아가는 협동심</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
