@@ -1,73 +1,15 @@
 {% extends 'index.html' %} {% block content %}
-<style>
-  .novengers_img {
-    margin: auto;
-    display: block;
-  }
-
-  .title-buttons {
-    text-align: center;
-  }
-</style>
+<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/novengers_img.css') }}" />
+<script type="text/javascript" src="{{ url_for('static', filename='js/load_visitBook.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/delete_visitBook.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/create_visitBook.js') }}"></script>
 
 <script>
   $(document).ready(function () {
     load_visitBook();
   });
-
-  function load_visitBook() {
-    fetch("http://localhost:5001/board/list")
-      .then((res) => res.json())
-      .then((data) => {
-        let arr = data["visitBook_li"];
-        let visit_num = 1;
-        arr.forEach((v) => {
-          $("#visitBook-card").append(`
-            <div class="card position-relative" style="width: 18rem;">
-              <h3>${v["nickname"]}</h3>
-              <hr/>
-              <div class="card-body">
-                <p class="card-text">${v["comment"]}</p>
-              </div>
-              <button type="button" data-bs-toggle="modal" data-bs-target="#deleteModal" class="btn-close position-absolute top-0 end-0" aria-label="Close"></button>
-            </div>
-            `);
-        });
-      });
-  }
-
-  function delete_visitBook() {
-    let password = $("#delete-visitBook").val();
-
-    let formData = new FormData();
-    formData.append("password", password);
-
-    fetch("http://localhost:5001/board", { method: "DELETE", body: formData })
-      .then((res) => res.json())
-      .then((data) => {
-        alert(data["msg"]);
-        window.location.reload();
-      });
-  }
-
-  function create_visitBook() {
-    let nickname = $("#nickname").val();
-    let comment = $("#comment").val();
-    let password = $("#password").val();
-
-    let formData = new FormData();
-    formData.append("nickname", nickname);
-    formData.append("comment", comment);
-    formData.append("password", password);
-
-    fetch("http://localhost:5001/board", { method: "POST", body: formData })
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(data["msg"]);
-        alert(data["msg"]);
-      });
-  }
 </script>
+
 <div class="novengers">
   <div>
     <img
