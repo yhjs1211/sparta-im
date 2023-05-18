@@ -4,24 +4,24 @@ app = Flask(__name__)
 
 from pymongo import MongoClient
 
-mongo_key = 'Your Mongo Key'
+mongo_key = 'mongodb+srv://sparta:test@cluster0.goswrtc.mongodb.net/?retryWrites=true&w=majority'
 
-client = MongoClient('Your Mongo Key')
+client = MongoClient('mongodb+srv://sparta:test@cluster0.goswrtc.mongodb.net/?retryWrites=true&w=majority')
 db = client.dbsparta
 
 @app.route('/')
 def home():
-    try:
-        return render_template('index.html'), 200
-    except Exception as e:
+    try: #실행할 코드
+        return render_template('index.html'), 200 # HTTP 상태코드로 200은 요청이 성공적으로 완료되었다는 의미이다.
+    except Exception as e: #예외가 발생했을 때 처리하는 코드, 에러 메시지는 e에 저장된다.
         print(e)
-        return jsonify({ 'msg':e }), 500
+        return jsonify({ 'msg':e }), 500 # HTTP 상태코드로 500은 처리할 수 없는 내부 오류가 발생했다는 의미이다.
 
 # 회원정보를 DB에 저장
-@app.route("/im", methods=["POST"])
+@app.route("/im", methods=["POST"]) #HTTP의 메소드인 POST를 이용한다. POST 메서드는 서버로 데이터를 전송한다.
 def bucket_post():
     try:
-        name = request.form['name_give']
+        name = request.form['name_give'] #sava_member.js에서 저장된 name_give 값을 요청한다.
         position = request.form['po_give']
         s_i = request.form['s_i_give']
         mbti = request.form['mbti_give']
@@ -31,7 +31,7 @@ def bucket_post():
 
         
         doc = {
-            'name':name,
+            'name':name, #name에 저장된 값을 'name'이라는 항목에 저장
             'position':position,
             'self_introduce':s_i,
             'mbti':mbti,
@@ -40,15 +40,15 @@ def bucket_post():
             'image':image
         }
 
-        db.novengers.insert_one(doc)
-
-        return jsonify({ 'msg': 'Save Compelete !' }), 200
+        db.novengers.insert_one(doc) #doc에 담긴 데이터를 db.novengers 에 전송한다.
+        return jsonify({ 'msg': 'Save Compelete !' }), 200 
+        # 전송이 성공되면 msg를 띄운다 feat. save_member.js
     except Exception as e:
         print(e)
         return jsonify({ 'msg':e }), 500
 
 # 회원정보 수정
-@app.route('/im', methods=["PUT"])
+@app.route('/im', methods=["PUT"]) #HTTP 메서드 PUT은 서버의 데이터를 갱신, 수정할 때 사용된다.
 def bucket_put():
     try:
         post_id = request.form['post_id_give']
