@@ -29,3 +29,13 @@ function update_member() {
             window.location.reload();
         });
 }
+
+function correct_id(id) {
+    let correct = true;
+
+    if (id.length < 24) {
+        correct = false;
+    }
+
+    return correct;
+}

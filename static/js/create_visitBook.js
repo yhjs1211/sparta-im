@@ -11,7 +11,6 @@ function create_visitBook() {
     fetch("http://localhost:5001/board", { method: "POST", body: formData })
         .then((res) => res.json())
         .then((data) => {
-            console.log(data["msg"]);
             alert(data["msg"]);
         });
 }
