@@ -7,7 +7,7 @@ cors = CORS(app, resources={
     r"/im/*":{"origin":"*"}
 })
 
-from pymongo import MongoClient, ReturnDocument
+from pymongo import MongoClient
 client = MongoClient('mongodb+srv://sparta:test@cluster0.x2zlpmf.mongodb.net/?retryWrites=true&w=majority')
 db = client.dbsparta
 
@@ -70,25 +70,32 @@ def render_board():
 @app.route("/board", methods=["POST"])
 def create_visitBook():
     doc={}
-    if('_id' in request.form):
-        db.visitBooks.delete_one({'_id':ObjectId(request.form['_id'][0:24])})
-        return jsonify({'msg':"방명록이 삭제되었습니다."})
+    for i in request.form.keys():
+        doc[i]=request.form[i]
+
+    db.visitBooks.insert_one(doc)
+
+    return jsonify({'msg':"방명록이 생성되었습니다."})
+    
+@app.route("/board", methods=["DELETE"])
+def delete_visitBook():
+    password = request.form['password']
+    print(password)    
+    chk = db.visitBooks.find_one({'password':password})
+    print(chk)
+    if(chk is not None):
+        db.visitBooks.delete_one({'password':password})
+        return jsonify({'msg':"삭제되었습니다."})
     else:
-        for i in request.form.keys():
-            doc[i]=request.form[i]
-        db.visitBooks.insert_one(doc)
-        return jsonify({'msg':"방명록이 생성되었습니다."})
-    
-    
+        return jsonify({'msg':"비밀번호를 확인해주세요"})
 
 @app.route("/board/list", methods=["GET"])
 def visitBook_get():
     visitBook_li = list(db.visitBooks.find({}))
     
     for a in visitBook_li:
-        a['_id']=str(a['_id'])
+        a['_id']=str(a['_id'])[18:24]
     return jsonify({'visitBook_li': visitBook_li})
-
 
 if __name__ == '__main__':
     app.run('127.0.0.1', port=5001, debug=True)
