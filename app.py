@@ -139,9 +139,7 @@ def visitBook_get():
 
 @app.route("/qq", methods=["DELETE"])
 def bucket_del():
-    # id = request.form.get("_id_give")
     id = request.form['_id_give']
-    # print("qqqqqqqqqqqqqqqqqqqqqq",id)
     id = ObjectId(id)
     db.novengers.delete_one({'_id':id})
 
