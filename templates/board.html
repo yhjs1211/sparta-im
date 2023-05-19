@@ -1,0 +1,115 @@
+{% extends 'index.html' %} {% block content %}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/novengers_img.css') }}" />
+<script type="text/javascript" src="{{ url_for('static', filename='js/load_visitBook.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/delete_visitBook.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/create_visitBook.js') }}"></script>
+
+<script>
+  $(document).ready(function () {
+    load_visitBook();
+  });
+</script>
+
+<div class="novengers">
+  <div>
+    <img
+      class="novengers_img"
+      src="{{url_for('static',filename='images/visitbook.png')}}"
+      height="450px"
+    />
+  </div>
+  <div class="title-buttons">
+    <button
+      class="btn btn-outline-success btn-lg"
+      id="create-button"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#visitBook"
+      aria-expanded="false"
+      aria-controls="visitBook"
+    >
+      한마디 남기기
+    </button>
+  </div>
+</div>
+<!-- Collapse -->
+<form id="visitBookForm" onsubmit="create_visitBook()">
+  <div class="collapse" id="visitBook">
+    <div class="card card-body">
+      <div class="position-relative">
+        <div class="row">
+          <div class="col">
+            <label for="nickname" class="form-label">닉네임 👏</label>
+            <input type="text" class="form-control" id="nickname" required />
+          </div>
+          <div class="col">
+            <label for="password" class="form-label">비밀번호 👏</label>
+            <input
+              type="password"
+              class="form-control"
+              id="password"
+              required
+            />
+          </div>
+        </div>
+        <div class="mb-5">
+          <label for="comment" class="form-label">한마디 👏</label>
+          <textarea class="form-control" id="comment" rows="4"></textarea>
+        </div>
+        <button
+          class="btn btn-lg btn-primary position-absolute bottom-0 end-0"
+          type="submit"
+        >
+          등록하기
+        </button>
+      </div>
+    </div>
+  </div>
+</form>
+
+<!-- Modal -->
+<div
+  class="modal fade"
+  id="deleteModal"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <form id="deleteVisitBookForm" onsubmit="delete_visitBook()">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5">방명록 삭제</h1>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <h3>👏 삭제하시려면 비밀번호를 입력해주세요.</h3>
+          <input
+            class="form-control"
+            type="password"
+            id="delete-visitBook"
+            required
+          />
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-outline-danger">삭제하기</button>
+          <button
+            type="button"
+            class="btn btn-outline-secondary"
+            data-bs-dismiss="modal"
+          >
+            닫기
+          </button>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+
+<div id="visitBook-card" class="line row row-cols-1 row-cols-md-5 g-4"></div>
+{% endblock %}
