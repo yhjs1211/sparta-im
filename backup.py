@@ -2,10 +2,10 @@ from bson.objectid import ObjectId
 from flask import Flask, render_template, request, jsonify
 app = Flask(__name__)
 
-mongo_Key = 'Your Mongo Key'
+mongo_Key = 'mongodb+srv://sparta:test@cluster0.goswrtc.mongodb.net/?retryWrites=true&w=majority'
 
 from pymongo import MongoClient
-client = MongoClient('Your Mongo Key')
+client = MongoClient('mongodb+srv://sparta:test@cluster0.goswrtc.mongodb.net/?retryWrites=true&w=majority')
 db = client.dbsparta
 
 @app.route('/')
